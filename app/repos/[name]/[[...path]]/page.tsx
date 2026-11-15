@@ -23,24 +23,25 @@ export default async function RepoPage({ params }: { params: Promise<{ name: str
   const dir = filePath?.split("/").slice(0, -1).join("/") ?? "";
 
   return (
-    <main style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1rem" }}>
-      <nav>
+    <main className="case">
+      <nav className="crumbs" aria-label="Breadcrumb">
         <Link href="/">← All projects</Link>
-        {filePath && <> · <Link href={`/repos/${name}/`}>{name}</Link></>}
-        {" · "}
-        <a href={repo.html_url}>View on GitHub</a>
+        {filePath && <Link href={`/repos/${name}/`}>{name}</Link>}
+        <a href={repo.html_url}>View on GitHub ↗</a>
       </nav>
-      <h1>{name}</h1>
-      {source ? <Markdown source={source} repo={repo} dir={dir} /> : <p><em>No README found.</em></p>}
+      <h1 className="case-title">{filePath ? filePath.split("/").pop() : name}</h1>
+      <article className="doc">
+        {source ? <Markdown source={source} repo={repo} dir={dir} /> : <p><em>No README found.</em></p>}
+      </article>
       {pages.length > 0 && (
-        <>
+        <section className="pages">
           <h2>More pages in this repo</h2>
           <ul>
             {pages.map((p) => (
               <li key={p}><Link href={`/repos/${name}/${p}/`}>{p}</Link></li>
             ))}
           </ul>
-        </>
+        </section>
       )}
     </main>
   );
