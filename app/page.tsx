@@ -2,17 +2,14 @@ import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
 import Ticker from "@/components/Ticker";
-import { featured, hidden } from "@/content/featured";
+import { hidden, projectRepos, projects } from "@/content/projects";
 import { education, experience, profile, skills, tickerExtras } from "@/content/profile";
 import { getRepos } from "@/lib/github";
 
 export default async function Home() {
   const repos = await getRepos();
-  const picks = Object.keys(featured)
-    .map((name) => repos.find((r) => r.name === name))
-    .filter((r): r is NonNullable<typeof r> => Boolean(r));
-  const more = repos.filter((r) => !featured[r.name] && !hidden.has(r.name));
-  const stack = [...new Set([...tickerExtras, ...Object.values(featured).flatMap((f) => f.stack)])];
+  const more = repos.filter((r) => !projectRepos.has(r.name) && !hidden.has(r.name));
+  const stack = [...new Set([...tickerExtras, ...projects.filter((p) => !p.placeholder).flatMap((p) => p.stack)])];
 
   return (
     <main>
@@ -37,11 +34,11 @@ export default async function Home() {
       <section id="work" className="section">
         <div className="section-head">
           <h2>Selected work</h2>
-          <p className="mono-note">{String(picks.length).padStart(2, "0")} projects · click or drag a card to flip it</p>
+          <p className="mono-note">{String(projects.length).padStart(2, "0")} projects · click a card to open it · fold the corner to flip</p>
         </div>
         <div className="grid">
-          {picks.map((repo, i) => (
-            <ProjectCard key={repo.name} index={i} repo={repo} meta={featured[repo.name]} />
+          {projects.map((p, i) => (
+            <ProjectCard key={p.slug} index={i} project={p} />
           ))}
         </div>
       </section>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import FlipCard from "./FlipCard";
-import type { Featured } from "@/content/featured";
-import type { Repo } from "@/lib/github";
+import type { Project } from "@/content/projects";
+import { GITHUB_USER } from "@/lib/github";
 
-export default function ProjectCard({ index, repo, meta }: { index: number; repo: Repo; meta: Featured }) {
+export default function ProjectCard({ index, project: p }: { index: number; project: Project }) {
   const num = String(index + 1).padStart(2, "0");
+  const href = `/work/${p.slug}/`;
   return (
     <article className="project">
       <FlipCard
@@ -16,46 +17,74 @@ export default function ProjectCard({ index, repo, meta }: { index: number; repo
         shadowOpacity={0.28}
         glareOpacity={0.14}
         tiltMax={8}
-        ariaLabel={`${meta.title}. Flip to read the summary.`}
+        href={href}
+        flipCorner={60}
+        ariaLabel={`${p.title}: open the project page. Press Space to flip the card for a summary.`}
         front={
           <div className="pc-face pc-front">
             <div className="pc-top">
-              <span className="pc-num" style={{ background: meta.bg, color: meta.fg }}>
+              <span className="pc-num" style={{ background: p.bg, color: p.fg }}>
                 {num}
               </span>
-              <span className="pc-kicker">{meta.kicker}</span>
+              <span className="pc-kicker">{p.kicker}</span>
             </div>
-            <h3 className="pc-title">{meta.title}</h3>
+            <h3 className="pc-title">{p.title}</h3>
             <div className="pc-bottom">
               <ul className="pc-chips">
-                {meta.stack.slice(0, 3).map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
+                {p.placeholder ? (
+                  <li>Coming soon</li>
+                ) : (
+                  p.stack.slice(0, 3).map((s) => <li key={s}>{s}</li>)
+                )}
               </ul>
-              <span className="pc-hint">Flip ↻</span>
+              <span className="pc-hint">Open →</span>
             </div>
+            <Ear id={`${p.slug}-front`} flap={p.bg} ink={p.fg} />
           </div>
         }
         back={
-          <div className="pc-face pc-back" style={{ background: meta.bg, color: meta.fg }}>
-            <p className="pc-blurb">{meta.blurb}</p>
+          <div className="pc-face pc-back" style={{ background: p.bg, color: p.fg }}>
+            <p className="pc-blurb">{p.blurb}</p>
             <div>
-              <div className="pc-stat">{meta.stat.value}</div>
-              <p className="pc-statlabel">{meta.stat.label}</p>
+              <div className="pc-stat">{p.stat.value}</div>
+              <p className="pc-statlabel">{p.stat.label}</p>
             </div>
             <ul className="pc-stack">
-              {meta.stack.map((s) => (
+              {p.stack.map((s) => (
                 <li key={s}>{s}</li>
               ))}
             </ul>
+            <Ear id={`${p.slug}-back`} flap="#f6f2e8" ink="#15120f" />
           </div>
         }
       />
       <div className="project-links">
-        <Link href={`/repos/${repo.name}/`}>Case study →</Link>
-        <a href={repo.html_url}>GitHub ↗</a>
-        {meta.live && <a href={meta.live}>Live ↗</a>}
+        <Link href={href} className="project-open">View project →</Link>
+        {p.repo && <a href={`https://github.com/${GITHUB_USER}/${p.repo}`}>GitHub ↗</a>}
+        {p.live && <a href={p.live}>Live ↗</a>}
       </div>
     </article>
+  );
+}
+
+/** Dog-eared bottom-right corner. The folded flap shows the colour of the other side. */
+function Ear({ id, flap, ink }: { id: string; flap: string; ink: string }) {
+  return (
+    <span className="pc-ear" title="Flip card" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id={`ear-${id}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#000" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#000" stopOpacity="0.22" />
+          </linearGradient>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill={flap} />
+        <polygon points="0,0 100,0 0,100" fill={`url(#ear-${id})`} />
+        <text x="34" y="34" transform="rotate(-45 34 34)" textAnchor="middle" dominantBaseline="central" fill={ink} className="pc-ear-label">
+          Flip
+        </text>
+        <polygon points="0,0 100,0 0,100" fill="none" stroke="#15120f" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      </svg>
+    </span>
   );
 }

@@ -22,6 +22,8 @@ import {
   type MotionStyle
 } from 'motion/react';
 
+import { useRouter } from 'next/navigation';
+
 import './FlipCard.css';
 
 export type FlipCardAxis = 'x' | 'y';
@@ -34,6 +36,10 @@ export interface FlipCardProps {
   onFlipChange?: (flipped: boolean) => void;
   axis?: FlipCardAxis;
   flipOnClick?: boolean;
+  /** When set, a click/tap or Enter opens this URL instead of flipping (Space still flips). */
+  href?: string;
+  /** Size in px of a bottom-right square where a click flips instead of opening `href`. */
+  flipCorner?: number;
   draggable?: boolean;
   dragDistance?: number;
   tilt?: boolean;
@@ -63,6 +69,7 @@ interface Grip {
   y: number;
   base: number;
   moved: boolean;
+  corner: boolean;
   slop: number;
   hist: { t: number; v: number }[];
 }
@@ -85,6 +92,8 @@ const FlipCard: React.FC<FlipCardProps> = ({
   onFlipChange,
   axis = 'y',
   flipOnClick = true,
+  href,
+  flipCorner = 0,
   draggable = true,
   dragDistance = 0,
   tilt = true,
@@ -108,6 +117,12 @@ const FlipCard: React.FC<FlipCardProps> = ({
   className = ''
 }) => {
   const reduce = useReducedMotion();
+  const router = useRouter();
+  const open = (newTab: boolean) => {
+    if (!href) return;
+    if (newTab) window.open(href, '_blank', 'noopener');
+    else router.push(href);
+  };
   const controlled = flipped !== undefined;
   const [inner, setInner] = useState(defaultFlipped);
   const [dragging, setDragging] = useState(false);
@@ -174,6 +189,11 @@ const FlipCard: React.FC<FlipCardProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disabled]);
 
+  const inCorner = (e: PointerEvent<HTMLDivElement>) => {
+    if (flipCorner <= 0) return false;
+    const r = e.currentTarget.getBoundingClientRect();
+    return e.clientX >= r.right - flipCorner && e.clientY >= r.bottom - flipCorner;
+  };
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (disabled || e.button !== 0 || grip.current) return;
     try {
@@ -186,6 +206,7 @@ const FlipCard: React.FC<FlipCardProps> = ({
       y: e.clientY,
       base: turn.get(),
       moved: false,
+      corner: inCorner(e),
       slop: e.pointerType === 'touch' ? SLOP.coarse : SLOP.fine,
       hist: []
     };
@@ -231,7 +252,8 @@ const FlipCard: React.FC<FlipCardProps> = ({
     setDragging(false);
     if (e.pointerType === 'touch' || !rootRef.current?.matches(':hover')) rest();
     if (!g.moved) {
-      if (!cancelled && flipOnClick) flip(false);
+      if (!cancelled && href && !g.corner) open(e.metaKey || e.ctrlKey);
+      else if (!cancelled && flipOnClick) flip(false);
       else settle(target.current, 0, false);
       return;
     }
@@ -247,10 +269,14 @@ const FlipCard: React.FC<FlipCardProps> = ({
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (disabled || (e.key !== 'Enter' && e.key !== ' ')) return;
     e.preventDefault();
-    if (!e.repeat) flip(true);
+    if (e.repeat) return;
+    if (href && e.key === 'Enter') open(e.metaKey || e.ctrlKey);
+    else flip(true);
   };
   const onClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (!disabled && e.detail === 0) flip(true);
+    if (disabled || e.detail !== 0) return;
+    if (href) open(false);
+    else flip(true);
   };
 
   const rotorStyle = {
@@ -263,9 +289,9 @@ const FlipCard: React.FC<FlipCardProps> = ({
   return (
     <div
       ref={rootRef}
-      role="button"
+      role={href ? 'link' : 'button'}
       tabIndex={disabled ? -1 : 0}
-      aria-pressed={shown}
+      aria-pressed={href ? undefined : shown}
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}
       className={`flip-card${className ? ` ${className}` : ''}`}
@@ -280,7 +306,9 @@ const FlipCard: React.FC<FlipCardProps> = ({
       onPointerCancel={e => release(e, true)}
       onLostPointerCapture={e => release(e, true)}
       onPointerEnter={e => {
-        if (!reduce && !disabled && e.pointerType !== 'touch') lift.set(hoverScale);
+        if (disabled || e.pointerType === 'touch') return;
+        if (href) router.prefetch(href);
+        if (!reduce) lift.set(hoverScale);
       }}
       onPointerLeave={() => {
         if (!grip.current) rest();
