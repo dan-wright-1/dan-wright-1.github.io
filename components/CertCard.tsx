@@ -37,7 +37,7 @@ export default function CertCard({ index }: { index: number }) {
               <ul className="cc-badges" aria-label="Certification badges">
                 {certs.map((c) => (
                   <li key={c.title}>
-                    <CertBadge cert={c} size={46} />
+                    <CertBadge cert={c} size={62} />
                   </li>
                 ))}
               </ul>

@@ -48,10 +48,18 @@ async function download(url, base) {
   const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
-  const ext = EXT[type] ?? path.extname(new URL(url).pathname).slice(1) ?? "png";
-  const name = `${base}.${ext || "png"}`;
+  const ext = EXT[type];
+  // downloadLogoUrl serves a zip of logo variants, so accept real images only.
+  if (!ext) throw new Error(`not an image (${type || "no content type"})`);
+  const name = `${base}.${ext}`;
   await fs.writeFile(path.join(logoDir, name), Buffer.from(await res.arrayBuffer()));
   return `/certs/${name}`;
+}
+
+/** Trailhead sends dates like "2026-2-1"; pad them so they sort and parse reliably. */
+function isoDate(d) {
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(d ?? "");
+  return m ? `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}` : null;
 }
 
 async function main() {
@@ -79,18 +87,21 @@ async function main() {
     const base = fileSlug(c.title);
     const previous = saved.certifications.find((s) => s.title === c.title)?.logo ?? null;
     let logo = previous;
-    const src = c.downloadLogoUrl || c.logoUrl;
-    if (src) {
+    let error = "no logo URL";
+    for (const src of [c.logoUrl, c.downloadLogoUrl].filter(Boolean)) {
       try {
         logo = await download(src, base);
+        error = null;
+        break;
       } catch (e) {
-        log(`logo for "${c.title}" failed (${e.message}); ${previous ? "keeping the saved one" : "using a placeholder"}`);
+        error = e.message;
       }
     }
+    if (error) log(`logo for "${c.title}" failed (${error}); ${previous ? "keeping the saved one" : "using a placeholder"}`);
     certifications.push({
       title: c.title,
       product: c.product ?? null,
-      dateCompleted: c.dateCompleted ?? null,
+      dateCompleted: isoDate(c.dateCompleted),
       expired: Boolean(c.status?.expired),
       logo,
       infoUrl: c.infoUrl ?? null,
@@ -98,10 +109,15 @@ async function main() {
   }
   certifications.sort((a, b) => (b.dateCompleted ?? "").localeCompare(a.dateCompleted ?? ""));
 
+  const profileUrl = `https://trailhead.salesforce.com/profile/${slug}`;
+  if (saved.source === "trailhead" && saved.profileUrl === profileUrl && JSON.stringify(saved.certifications) === JSON.stringify(certifications)) {
+    return log(`${certifications.length} certifications, unchanged since the last fetch`);
+  }
+
   const out = {
     source: "trailhead",
     fetchedAt: new Date().toISOString(),
-    profileUrl: `https://trailhead.salesforce.com/profile/${slug}`,
+    profileUrl,
     certifications,
   };
   await fs.writeFile(outJson, JSON.stringify(out, null, 2) + "\n");

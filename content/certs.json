@@ -1,12 +1,55 @@
 {
-  "source": "saved",
-  "fetchedAt": null,
-  "profileUrl": null,
+  "source": "trailhead",
+  "fetchedAt": "2026-11-17T20:53:30.438Z",
+  "profileUrl": "https://trailhead.salesforce.com/profile/j9dqvseh2g8poo8inl",
   "certifications": [
-    { "title": "Administrator", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
-    { "title": "Data 360 Consultant", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
-    { "title": "Platform App Builder", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
-    { "title": "Tableau Data Analyst", "product": "Tableau", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
-    { "title": "Agentforce Specialist", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null }
+    {
+      "title": "Salesforce Certified Data 360 Consultant",
+      "product": "Data 360",
+      "dateCompleted": "2026-11-07",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-data-360-consultant.png",
+      "infoUrl": "https://trailheadacademy.salesforce.com/certificate/exam-data-cloud---Data-Con-101"
+    },
+    {
+      "title": "Salesforce Certified Platform App Builder",
+      "product": "Platform",
+      "dateCompleted": "2026-10-10",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-platform-app-builder.png",
+      "infoUrl": "https://trailheadacademy.salesforce.com/certificate/exam-app-builder---Plat-Admn-202"
+    },
+    {
+      "title": "Salesforce Certified Agentforce Specialist",
+      "product": "Agentforce",
+      "dateCompleted": "2026-02-01",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-agentforce-specialist.png",
+      "infoUrl": "https://trailheadacademy.salesforce.com/certificate/exam-agentforce-specialist---AI-201"
+    },
+    {
+      "title": "Salesforce Certified Tableau Data Analyst",
+      "product": "Tableau",
+      "dateCompleted": "2025-06-16",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-tableau-data-analyst.png",
+      "infoUrl": "https://trailheadacademy.salesforce.com/certificate/exam-tableau-data-analyst---Analytics-DA-201"
+    },
+    {
+      "title": "Salesforce Certified AI Associate",
+      "product": "Agentforce",
+      "dateCompleted": "2025-01-02",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-ai-associate.png",
+      "infoUrl": "https://trailhead.salesforce.com/credentials/aiassociate"
+    },
+    {
+      "title": "Salesforce Certified Platform Administrator",
+      "product": "Platform",
+      "dateCompleted": "2024-12-16",
+      "expired": false,
+      "logo": "/certs/salesforce-certified-platform-administrator.png",
+      "infoUrl": "https://trailheadacademy.salesforce.com/certificate/exam-platform-admin---Plat-Admn-201"
+    }
   ]
 }

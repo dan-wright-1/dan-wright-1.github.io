@@ -51,7 +51,7 @@ export default function CertificationsPage() {
       </section>
 
       <section className="work-section">
-        <h2>Badges</h2>
+        <h2>Certifications</h2>
         <ul className="cert-grid">
           {certs.map((c) => {
             const date = formatDate(c.dateCompleted);
@@ -62,7 +62,7 @@ export default function CertificationsPage() {
                 <p className="cert-meta">
                   {[c.product, date && `Earned ${date}`].filter(Boolean).join(" · ")}
                 </p>
-                {c.infoUrl && <a href={c.infoUrl}>About this certification ↗</a>}
+                {c.infoUrl && <a href={c.infoUrl}>Details ↗</a>}
               </li>
             );
           })}
