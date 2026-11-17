@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
+import diagrams from "@/content/diagrams.json";
 import { projects } from "@/content/projects";
 import { profile } from "@/content/profile";
 import { GITHUB_USER } from "@/lib/github";
 
 export const dynamicParams = false;
+
+// content/diagrams.json lists Lucid diagrams; scripts/fetch-diagrams.mjs turns each
+// into public/diagrams/<slug>.svg before the build.
+type Diagram = { title: string; alt: string; lucidUrl: string; width: number; height: number };
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -23,10 +28,13 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const i = projects.findIndex((x) => x.slug === slug);
   if (i === -1) notFound();
   const p = projects[i];
-  const prev = projects[(i - 1 + projects.length) % projects.length];
-  const next = projects[(i + 1) % projects.length];
+  // The certifications page sits between the last project and the first.
+  const certsLink = { href: "/certifications/", title: "Salesforce Certifications" };
+  const prev = i === 0 ? certsLink : { href: `/work/${projects[i - 1].slug}/`, title: projects[i - 1].title };
+  const next = i === projects.length - 1 ? certsLink : { href: `/work/${projects[i + 1].slug}/`, title: projects[i + 1].title };
   const num = String(i + 1).padStart(2, "0");
   const theme = { "--p-bg": p.bg, "--p-fg": p.fg } as CSSProperties;
+  const diagram = (diagrams as Record<string, Diagram>)[p.slug];
 
   return (
     <main className="work" style={theme}>
@@ -74,6 +82,25 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
               <p className="work-metric-label">{m.label}</p>
             </div>
           ))}
+        </section>
+      )}
+
+      {diagram && (
+        <section className="work-section">
+          <h2>Architecture</h2>
+          <figure className="work-diagram">
+            <a href={`/diagrams/${p.slug}.svg`} className="work-diagram-frame" aria-label="Open the full-size diagram">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/diagrams/${p.slug}.svg`} alt={diagram.alt} width={diagram.width} height={diagram.height} />
+            </a>
+            <figcaption>
+              <span>{diagram.title}</span>
+              <span className="work-diagram-links">
+                <a href={`/diagrams/${p.slug}.svg`}>Full size ↗</a>
+                <a href={diagram.lucidUrl}>Open in Lucid ↗</a>
+              </span>
+            </figcaption>
+          </figure>
         </section>
       )}
 
@@ -179,11 +206,11 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       )}
 
       <nav className="work-pager" aria-label="More projects">
-        <Link href={`/work/${prev.slug}/`}>
+        <Link href={prev.href}>
           <span>← Previous</span>
           {prev.title}
         </Link>
-        <Link href={`/work/${next.slug}/`} className="work-pager-next">
+        <Link href={next.href} className="work-pager-next">
           <span>Next →</span>
           {next.title}
         </Link>

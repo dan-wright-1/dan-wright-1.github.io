@@ -40,7 +40,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "snowflake-ify",
-    title: "Snowflake-ify",
+    title: "How I Snowflake-ified the NorthStar AI Platform",
     kicker: "Cloud architecture",
     status: "Snowflake build in progress",
     blurb:
@@ -109,7 +109,7 @@ export const projects: Project[] = [
   },
   {
     slug: "agentbuild",
-    title: "AgentBuild",
+    title: "My Agentic WebApp",
     kicker: "Applied AI",
     blurb:
       "A streaming chat agent with a calculator, web search, RAG over a local knowledge base, and Wikipedia. The UI shows which tools answered each question.",
@@ -150,7 +150,7 @@ export const projects: Project[] = [
   },
   {
     slug: "adventureworks-pipeline",
-    title: "AdventureWorks Real-Time Sales Pipeline",
+    title: "AdventureWorks: A Real-Time Sales Data Pipeline",
     kicker: "Data engineering",
     blurb:
       "Moves live orders and support chats from PostgreSQL and MongoDB into Snowflake, then merges them with historical sales in dbt so old reports keep working.",
@@ -192,7 +192,7 @@ export const projects: Project[] = [
   },
   {
     slug: "canvas-to-tasks",
-    title: "Canvas → Tasks Automation",
+    title: "Automating My College Tasks Lists",
     kicker: "Automation",
     blurb:
       "A self-hosted n8n workflow that runs every morning, pulls every Canvas assignment, and creates one Google Task per assignment in a list per course, without ever duplicating.",
@@ -238,7 +238,7 @@ export const projects: Project[] = [
   },
   {
     slug: "rpm-planner",
-    title: "RPM Planner",
+    title: "Tony Robbins Inspired RPM Planner WebApp",
     kicker: "Product",
     placeholder: true,
     blurb: "Placeholder: a one-paragraph summary of the RPM planner app goes here.",

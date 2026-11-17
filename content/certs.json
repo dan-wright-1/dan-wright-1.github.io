@@ -1,0 +1,12 @@
+{
+  "source": "saved",
+  "fetchedAt": null,
+  "profileUrl": null,
+  "certifications": [
+    { "title": "Administrator", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
+    { "title": "Data 360 Consultant", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
+    { "title": "Platform App Builder", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
+    { "title": "Tableau Data Analyst", "product": "Tableau", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null },
+    { "title": "Agentforce Specialist", "product": "Salesforce", "dateCompleted": null, "expired": false, "logo": null, "infoUrl": null }
+  ]
+}

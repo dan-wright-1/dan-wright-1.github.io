@@ -232,3 +232,23 @@ a { color: inherit; }
 .pc-ear svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(-3px -3px 3px rgba(21, 18, 15, 0.28)); }
 .project .pc-bottom, .project .pc-stack { padding-right: 3.25rem; }
 .pc-ear-label { font-family: var(--mono); font-size: 21px; font-weight: 700; letter-spacing: 0.02em; }
+
+/* certifications */
+.cert-badge { display: block; flex: none; object-fit: contain; }
+.cert-badge--mono { display: grid; place-items: center; border-radius: 50%; background: #0176d3; color: #fff; border: 2px solid var(--ink); font-family: var(--mono); font-weight: 700; letter-spacing: 0.02em; }
+.cc-badges { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.cert-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1rem; }
+.cert-grid li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; background: var(--paper-2); border: 2px solid var(--ink); padding: 1.75rem 1.25rem 1.5rem; }
+.cert-grid h3 { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; line-height: 1.1; margin: 0.75rem 0 0; }
+.cert-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin: 0; }
+.cert-grid a { font-family: var(--mono); font-size: 0.8rem; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.cert-grid a:hover { background: var(--accent); }
+
+/* architecture diagram */
+.work-diagram { margin: 0; width: min(1354px, calc(100vw - 2 * var(--gutter))); position: relative; left: 50%; transform: translateX(-50%); }
+.work-diagram-frame { display: block; background: #fff; border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); overflow-x: auto; cursor: zoom-in; }
+.work-diagram-frame img { display: block; width: 100%; min-width: 860px; height: auto; }
+.work-diagram figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin-top: 1.25rem; font-family: var(--mono); font-size: 0.8rem; }
+.work-diagram-links { display: flex; gap: 1.25rem; }
+.work-diagram-links a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.work-diagram-links a:hover { background: var(--accent); }

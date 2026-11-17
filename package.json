@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
+    "prebuild": "node scripts/fetch-certs.mjs && node scripts/fetch-diagrams.mjs",
     "build": "next build",
     "start": "serve out -l 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "certs": "node scripts/fetch-certs.mjs",
+    "diagrams": "node scripts/fetch-diagrams.mjs"
   },
   "dependencies": {
     "motion": "^14.14.0",
@@ -22,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "mupdf": "1.28.6",
     "serve": "^14.2.6",
     "typescript": "^5"
   },

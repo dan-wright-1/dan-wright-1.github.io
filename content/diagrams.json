@@ -1,0 +1,10 @@
+{
+  "snowflake-ify": {
+    "publishedPdf": "https://lucid.app/publicSegments/view/9d8cff75-3133-4fbc-b664-66c744132146/image.pdf",
+    "lucidUrl": "https://lucid.app/lucidchart/75bc6385-1cd4-49ca-bafa-535fbed0f11c/view",
+    "title": "NorthStar on Snowflake: where the data moves, and who can touch it",
+    "alt": "Architecture diagram of NorthStar on Snowflake. Inside one Snowflake account, a shared foundation band loads 163K raw rows, cleans them with a SQL task, builds features for 10K customers and registers them in the Feature Store. The retention band trains a churn model in a Python notebook, registers it, scores every customer weekly and feeds a retention campaign. The service band runs a Cortex Agent that searches policy docs, looks up orders and calls return, credit and escalation procedures, logging a trace for every tool call. Purple role chips show which roles can touch each band, and a resource monitor caps warehouse spend.",
+    "width": 1350,
+    "height": 675
+  }
+}

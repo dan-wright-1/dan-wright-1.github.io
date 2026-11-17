@@ -68,7 +68,7 @@ export default function ProjectCard({ index, project: p }: { index: number; proj
 }
 
 /** Dog-eared bottom-right corner. The folded flap shows the colour of the other side. */
-function Ear({ id, flap, ink }: { id: string; flap: string; ink: string }) {
+export function Ear({ id, flap, ink }: { id: string; flap: string; ink: string }) {
   return (
     <span className="pc-ear" title="Flip card" aria-hidden="true">
       <svg viewBox="0 0 100 100" preserveAspectRatio="none">

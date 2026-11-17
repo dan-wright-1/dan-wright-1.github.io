@@ -1,9 +1,11 @@
 import Link from "next/link";
+import CertCard from "@/components/CertCard";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
 import Ticker from "@/components/Ticker";
 import { hidden, projectRepos, projects } from "@/content/projects";
 import { education, experience, profile, skills, tickerExtras } from "@/content/profile";
+import { certs, shortName } from "@/lib/certs";
 import { getRepos } from "@/lib/github";
 
 export default async function Home() {
@@ -34,12 +36,13 @@ export default async function Home() {
       <section id="work" className="section">
         <div className="section-head">
           <h2>Selected work</h2>
-          <p className="mono-note">{String(projects.length).padStart(2, "0")} projects · click a card to open it · fold the corner to flip</p>
+          <p className="mono-note">{String(projects.length).padStart(2, "0")} projects + certifications · click a card to open it · fold the corner to flip</p>
         </div>
         <div className="grid">
           {projects.map((p, i) => (
             <ProjectCard key={p.slug} index={i} project={p} />
           ))}
+          <CertCard index={projects.length} />
         </div>
       </section>
 
@@ -75,7 +78,7 @@ export default async function Home() {
             <div key={s.group}>
               <h3 className="skills-group">{s.group}</h3>
               <ul className="chips">
-                {s.items.map((i) => (
+                {(s.group === "Salesforce certifications" ? certs.map((c) => shortName(c.title)) : s.items).map((i) => (
                   <li key={i}>{i}</li>
                 ))}
               </ul>
