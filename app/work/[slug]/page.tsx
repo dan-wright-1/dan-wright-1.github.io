@@ -1,7 +1,12 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
+import AdventureWorksDiagram from "@/components/pipeline/AdventureWorksDiagram";
+import PipelineFeed from "@/components/pipeline/PipelineFeed";
+import { PipelineSimProvider } from "@/components/pipeline/PipelineSim";
 import diagrams from "@/content/diagrams.json";
 import { projects } from "@/content/projects";
 import { profile } from "@/content/profile";
@@ -34,7 +39,53 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const next = i === projects.length - 1 ? certsLink : { href: `/work/${projects[i + 1].slug}/`, title: projects[i + 1].title };
   const num = String(i + 1).padStart(2, "0");
   const theme = { "--p-bg": p.bg, "--p-fg": p.fg } as CSSProperties;
-  const diagram = (diagrams as Record<string, Diagram>)[p.slug];
+  // Only show the section if a diagram has actually been saved (the fetch can fail on a first run).
+  const listed = (diagrams as Record<string, Diagram>)[p.slug];
+  const lucid = listed && existsSync(path.join(process.cwd(), "public", "diagrams", `${p.slug}.svg`)) ? listed : null;
+  const figure = lucid
+    ? { src: `/diagrams/${p.slug}.svg`, alt: lucid.alt, caption: lucid.title, width: lucid.width, height: lucid.height, lucidUrl: lucid.lucidUrl }
+    : p.figure
+      ? { ...p.figure, lucidUrl: null }
+      : null;
+  // AdventureWorks gets the live view: an event feed under the problem and an animated diagram.
+  const live = p.slug === "adventureworks-pipeline";
+
+  const problem = (
+    <section className="work-section">
+      <h2>The problem</h2>
+      <div className="work-prose">
+        {p.problem.map((para) => (
+          <p key={para.slice(0, 32)}>{para}</p>
+        ))}
+      </div>
+      {live && <PipelineFeed />}
+    </section>
+  );
+
+  const architecture = figure && (
+    <section className="work-section">
+      <h2>Architecture</h2>
+      <figure className="work-diagram">
+        {live ? (
+          <div className="work-diagram-frame work-diagram-frame--live">
+            <AdventureWorksDiagram />
+          </div>
+        ) : (
+          <a href={figure.src} className="work-diagram-frame" aria-label="Open the full-size diagram">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={figure.src} alt={figure.alt} width={figure.width} height={figure.height} />
+          </a>
+        )}
+        <figcaption>
+          <span>{figure.caption}</span>
+          <span className="work-diagram-links">
+            <a href={figure.src}>{live ? "Static diagram ↗" : "Full size ↗"}</a>
+            {figure.lucidUrl && <a href={figure.lucidUrl}>Open in Lucid ↗</a>}
+          </span>
+        </figcaption>
+      </figure>
+    </section>
+  );
 
   return (
     <main className="work" style={theme}>
@@ -53,6 +104,12 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         </div>
         <h1 className="work-title">{p.title}</h1>
         <p className="work-tagline">{p.tagline}</p>
+        {p.live && p.liveLabel && (
+          <p className="work-cta">
+            <a className="btn btn-solid" href={p.live}>{p.liveLabel} ↗</a>
+            {p.liveNote && <span>{p.liveNote}</span>}
+          </p>
+        )}
         <dl className="work-facts">
           {p.facts.map((f) => (
             <div key={f.label}>
@@ -85,33 +142,18 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         </section>
       )}
 
-      {diagram && (
-        <section className="work-section">
-          <h2>Architecture</h2>
-          <figure className="work-diagram">
-            <a href={`/diagrams/${p.slug}.svg`} className="work-diagram-frame" aria-label="Open the full-size diagram">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/diagrams/${p.slug}.svg`} alt={diagram.alt} width={diagram.width} height={diagram.height} />
-            </a>
-            <figcaption>
-              <span>{diagram.title}</span>
-              <span className="work-diagram-links">
-                <a href={`/diagrams/${p.slug}.svg`}>Full size ↗</a>
-                <a href={diagram.lucidUrl}>Open in Lucid ↗</a>
-              </span>
-            </figcaption>
-          </figure>
-        </section>
+      {live ? (
+        // One simulation drives both the event feed and the animated diagram.
+        <PipelineSimProvider>
+          {problem}
+          {architecture}
+        </PipelineSimProvider>
+      ) : (
+        <>
+          {problem}
+          {architecture}
+        </>
       )}
-
-      <section className="work-section">
-        <h2>The problem</h2>
-        <div className="work-prose">
-          {p.problem.map((para) => (
-            <p key={para.slice(0, 32)}>{para}</p>
-          ))}
-        </div>
-      </section>
 
       <section className="work-section">
         <h2>{p.flowTitle}</h2>

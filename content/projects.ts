@@ -18,6 +18,10 @@ export type Project = {
   fg: string;
   repo?: string;
   live?: string;
+  /** Text for the call-to-action button on the project page, e.g. "Try the live agent". */
+  liveLabel?: string;
+  /** Small print next to that button. */
+  liveNote?: string;
   /** Shown as a badge, e.g. "In progress". */
   status?: string;
   /** True while the write-up is still placeholder copy. */
@@ -35,6 +39,8 @@ export type Project = {
   scenarios?: { name: string; answer: string; why: string }[];
   next?: string[];
   related?: { label: string; href: string }[];
+  /** A hand-made diagram in public/ (Lucid diagrams go in content/diagrams.json instead). */
+  figure?: { src: string; alt: string; caption: string; width: number; height: number };
 };
 
 export const projects: Project[] = [
@@ -118,6 +124,9 @@ export const projects: Project[] = [
     bg: "#2f6b3a",
     fg: "#ffffff",
     repo: "AgentBuild",
+    live: "https://agent-build-phi.vercel.app",
+    liveLabel: "Try the live agent",
+    liveNote: "Runs on Vercel and is rate-limited. Web search is off in the demo; the other three tools are live.",
     tagline:
       "A multi-tool agent that decides for itself whether a question needs math, the web, an internal knowledge base or an encyclopedia, and shows its work.",
     facts: [
@@ -127,7 +136,7 @@ export const projects: Project[] = [
     ],
     metrics: [
       { value: "4", label: "tools the agent can choose between" },
-      { value: "16", label: "Vitest tests across the tool layer" },
+      { value: "20", label: "Vitest tests across the tools and search" },
       { value: "SSE", label: "tokens stream to the UI as they are generated" },
     ],
     problem: [
@@ -144,7 +153,7 @@ export const projects: Project[] = [
     highlights: [
       { title: "Tool badges", detail: "Each answer shows which tools produced it, so a user can tell a looked-up fact from a model guess." },
       { title: "Conversation memory", detail: "The client owns the history and sends it each turn, so follow-ups work without server-side session state." },
-      { title: "Source attribution", detail: "RAG answers return the matching chunks along with the files they came from, and the knowledge base persists across restarts." },
+      { title: "Source attribution", detail: "Knowledge-base answers return the matching passages, ranked with BM25 keyword search, along with the files they came from." },
       { title: "Docs first", detail: "A PRD, roadmap, architecture document and plan were written before the code and kept current in the repo." },
     ],
   },
@@ -159,6 +168,13 @@ export const projects: Project[] = [
     bg: "#ff4d1c",
     fg: "#15120f",
     repo: "multi-source-data-pipeline-adventureworks",
+    figure: {
+      src: "/images/adventureworks-pipeline.svg",
+      caption: "Where each order and chat log goes, from the source databases to the dashboard",
+      width: 1240,
+      height: 560,
+      alt: "Pipeline diagram. In Docker Compose, a data generator writes 50 orders every 10 seconds to PostgreSQL and chat logs to MongoDB. A Python processor polls both every 10 seconds, reads rows newer than each source's watermark, and uploads CSV or JSON batches to three Snowflake stages. Snowflake tasks copy the stages into raw tables every minute and then clear them. dbt rebuilds new orders into the nested historical format, combines them with historical orders using UNION ALL, cleans chat logs, and feeds a 30-day sales by country dashboard model.",
+    },
     tagline:
       "Adventure Works analysts could only see last year's sales. This pipeline brings new orders and support chats into the warehouse every few minutes, in the same shape as the old data.",
     facts: [
@@ -267,4 +283,4 @@ export const projects: Project[] = [
 export const projectRepos = new Set(projects.flatMap((p) => (p.repo ? [p.repo] : [])));
 
 // Repos that never appear on the home page.
-export const hidden = new Set(["cs401r-dwrigh63"]);
+export const hidden = new Set(["cs401r-dwrigh63", "dan-wright-1.github.io", "canvas-to-tasks"]);

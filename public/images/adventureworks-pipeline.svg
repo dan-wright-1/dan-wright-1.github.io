@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 560" width="1240" height="560" role="img" aria-labelledby="t d">
+  <title id="t">AdventureWorks real-time sales pipeline</title>
+  <desc id="d">A data generator writes orders to PostgreSQL and chat logs to MongoDB. A Python processor polls both every 10 seconds, extracts rows newer than each source's watermark, and uploads CSV or JSON batches to three Snowflake stages. Snowflake tasks copy the stages into raw tables every minute and then clear them. dbt rebuilds new orders into the nested historical shape, unions them with historical orders, cleans chat logs, and feeds a 30-day sales by country dashboard model.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#15120f"/>
+    </marker>
+    <style>
+      .zone { fill: none; stroke: #15120f; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .zlabel { font: 600 12px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.08em; fill: #6b645a; }
+      .box { fill: #f6f2e8; stroke: #15120f; stroke-width: 2; }
+      .hot { fill: #ffd8cc; stroke: #15120f; stroke-width: 2; }
+      .note { fill: #fff3d6; stroke: #15120f; stroke-width: 1.5; }
+      .title { font: 18px Georgia, "Times New Roman", serif; fill: #15120f; }
+      .sub { font: 12.5px Helvetica, Arial, sans-serif; fill: #15120f; }
+      .mono { font: 12px ui-monospace, Menlo, Consolas, monospace; fill: #15120f; }
+      .small { font: 11px ui-monospace, Menlo, Consolas, monospace; fill: #6b645a; }
+      .flow { fill: none; stroke: #15120f; stroke-width: 1.75; marker-end: url(#arrow); }
+      .pill { fill: #15120f; }
+      .pilltext { font: 600 12px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.08em; fill: #f6f2e8; }
+      .pillnum { fill: #ff4d1c; }
+    </style>
+  </defs>
+
+  <rect width="1240" height="560" fill="#ece7da"/>
+
+  <!-- step pills -->
+  <g>
+    <rect class="pill" x="150" y="16" width="140" height="28" rx="14"/><circle class="pillnum" cx="166" cy="30" r="9"/>
+    <text class="pilltext" x="162" y="34">1</text><text class="pilltext" x="182" y="34">EXTRACT</text>
+
+    <rect class="pill" x="472" y="16" width="126" height="28" rx="14"/><circle class="pillnum" cx="488" cy="30" r="9"/>
+    <text class="pilltext" x="484" y="34">2</text><text class="pilltext" x="504" y="34">STAGE</text>
+
+    <rect class="pill" x="652" y="16" width="118" height="28" rx="14"/><circle class="pillnum" cx="668" cy="30" r="9"/>
+    <text class="pilltext" x="664" y="34">3</text><text class="pilltext" x="684" y="34">LOAD</text>
+
+    <rect class="pill" x="852" y="16" width="160" height="28" rx="14"/><circle class="pillnum" cx="868" cy="30" r="9"/>
+    <text class="pilltext" x="864" y="34">4</text><text class="pilltext" x="884" y="34">TRANSFORM</text>
+
+    <rect class="pill" x="1050" y="16" width="134" height="28" rx="14"/><circle class="pillnum" cx="1066" cy="30" r="9"/>
+    <text class="pilltext" x="1062" y="34">5</text><text class="pilltext" x="1082" y="34">REPORT</text>
+  </g>
+
+  <!-- ===== Zone A: Docker Compose ===== -->
+  <rect class="zone" x="20" y="60" width="400" height="480" rx="4"/>
+  <text class="zlabel" x="36" y="84">DOCKER COMPOSE · LOCAL</text>
+
+  <!-- generator -->
+  <rect class="box" x="130" y="100" width="180" height="64" rx="3"/>
+  <text class="title" x="146" y="126">Data generator</text>
+  <text class="sub" x="146" y="148">50 orders every 10 s</text>
+
+  <!-- PostgreSQL cylinder -->
+  <path class="box" d="M40 222 a85 10 0 0 1 170 0 v92 a85 10 0 0 1 -170 0 z"/>
+  <path d="M40 222 a85 10 0 0 0 170 0" fill="none" stroke="#15120f" stroke-width="2"/>
+  <text class="title" x="56" y="256">PostgreSQL</text>
+  <text class="sub" x="56" y="276">orders, order_details</text>
+  <text class="small" x="56" y="298">+ processor_metadata</text>
+  <text class="small" x="56" y="312">(the watermarks)</text>
+
+  <!-- MongoDB cylinder -->
+  <path class="box" d="M230 222 a85 10 0 0 1 170 0 v92 a85 10 0 0 1 -170 0 z"/>
+  <path d="M230 222 a85 10 0 0 0 170 0" fill="none" stroke="#15120f" stroke-width="2"/>
+  <text class="title" x="246" y="256">MongoDB</text>
+  <text class="sub" x="246" y="276">support chat logs</text>
+  <text class="small" x="246" y="298">JSON documents</text>
+
+  <path class="flow" d="M180 164 L140 210"/>
+  <path class="flow" d="M260 164 L300 210"/>
+
+  <!-- processor -->
+  <rect class="box" x="40" y="372" width="360" height="148" rx="3"/>
+  <text class="title" x="56" y="400">Python processor</text>
+  <text class="sub" x="56" y="424">Every 10 seconds, for each of the 3 sources:</text>
+  <text class="sub" x="56" y="446">1. read rows newer than its watermark</text>
+  <text class="sub" x="56" y="466">2. write them as one CSV or JSON batch</text>
+  <text class="sub" x="56" y="486">3. PUT the file to a Snowflake stage</text>
+  <text class="sub" x="56" y="506">4. move the watermark forward</text>
+
+  <path class="flow" d="M125 326 L125 368"/>
+  <path class="flow" d="M315 326 L315 368"/>
+  <!-- watermark read/write -->
+  <path class="flow" d="M95 368 L95 330" stroke-dasharray="4 3"/>
+
+  <!-- ===== Zone B: Snowflake ===== -->
+  <rect class="zone" x="440" y="60" width="780" height="480" rx="4"/>
+  <text class="zlabel" x="456" y="84">SNOWFLAKE · KOALA_DB</text>
+
+  <!-- stages -->
+  <rect class="box" x="460" y="104" width="150" height="64" rx="3"/>
+  <text class="mono" x="472" y="130">@orders_stage</text>
+  <text class="sub" x="472" y="152">CSV batches</text>
+
+  <rect class="box" x="460" y="194" width="150" height="64" rx="3"/>
+  <text class="mono" x="472" y="220">@order_details_stage</text>
+  <text class="sub" x="472" y="242">CSV batches</text>
+
+  <rect class="box" x="460" y="284" width="150" height="64" rx="3"/>
+  <text class="mono" x="472" y="310">@chat_stage</text>
+  <text class="sub" x="472" y="332">JSON lines</text>
+
+  <path class="flow" d="M400 420 C 430 420, 425 136, 456 136"/>
+  <path class="flow" d="M400 438 C 434 438, 428 226, 456 226"/>
+  <path class="flow" d="M400 456 C 438 456, 432 316, 456 316"/>
+
+  <!-- raw tables -->
+  <rect class="box" x="650" y="104" width="150" height="64" rx="3"/>
+  <text class="mono" x="662" y="130">orders_raw</text>
+  <text class="sub" x="662" y="152">RAW_EXT table</text>
+
+  <rect class="box" x="650" y="194" width="150" height="64" rx="3"/>
+  <text class="mono" x="662" y="220">order_details_raw</text>
+  <text class="sub" x="662" y="242">RAW_EXT table</text>
+
+  <rect class="box" x="650" y="284" width="150" height="64" rx="3"/>
+  <text class="mono" x="662" y="310">chat_logs_raw</text>
+  <text class="sub" x="662" y="332">one VARIANT column</text>
+
+  <path class="flow" d="M610 136 L646 136"/>
+  <path class="flow" d="M610 226 L646 226"/>
+  <path class="flow" d="M610 316 L646 316"/>
+
+  <!-- tasks note -->
+  <rect class="note" x="460" y="384" width="340" height="98" rx="3"/>
+  <text class="title" x="476" y="410">Snowflake tasks, every minute</text>
+  <text class="sub" x="476" y="432">COPY INTO each raw table, then a child task</text>
+  <text class="sub" x="476" y="452">(chained with AFTER) REMOVEs the stage files,</text>
+  <text class="small" x="476" y="472">so no file is loaded twice</text>
+
+  <!-- dbt region -->
+  <rect class="zone" x="820" y="96" width="384" height="430" rx="4" style="stroke-dasharray: 2 4;"/>
+  <text class="zlabel" x="836" y="118">DBT MODELS</text>
+
+  <!-- rebuild orders -->
+  <rect class="hot" x="836" y="132" width="184" height="104" rx="3"/>
+  <text class="title" x="850" y="158">Rebuild orders</text>
+  <text class="sub" x="850" y="180">nest each order's line items,</text>
+  <text class="sub" x="850" y="198">matching the old format</text>
+  <text class="small" x="850" y="222">ARRAY_AGG(OBJECT_CONSTRUCT)</text>
+
+  <path class="flow" d="M800 136 C 818 136, 812 168, 832 168"/>
+  <path class="flow" d="M800 226 C 818 226, 812 200, 832 200"/>
+
+  <!-- clean chat logs -->
+  <rect class="box" x="836" y="284" width="184" height="64" rx="3"/>
+  <text class="title" x="850" y="310">Clean chat logs</text>
+  <text class="sub" x="850" y="332">parse JSON, tidy text fields</text>
+  <path class="flow" d="M800 316 L832 316"/>
+
+  <!-- historical -->
+  <rect class="box" x="836" y="412" width="184" height="96" rx="3" style="stroke-dasharray: 5 3;"/>
+  <text class="title" x="850" y="438">Historical orders</text>
+  <text class="sub" x="850" y="460">old e-commerce export,</text>
+  <text class="sub" x="850" y="478">already in Snowflake</text>
+  <text class="small" x="850" y="498">nested JSON</text>
+
+  <!-- unified -->
+  <rect class="hot" x="1040" y="190" width="152" height="142" rx="3"/>
+  <text class="title" x="1054" y="216">Unified sales</text>
+  <text class="title" x="1054" y="236">orders</text>
+  <text class="sub" x="1054" y="258">old + new orders,</text>
+  <text class="sub" x="1054" y="276">same tests and</text>
+  <text class="sub" x="1054" y="294">reports as before</text>
+  <text class="small" x="1054" y="320">UNION ALL</text>
+
+  <path class="flow" d="M1020 200 C 1030 200, 1028 240, 1036 240"/>
+  <path class="flow" d="M1020 460 C 1032 460, 1026 290, 1036 290"/>
+
+  <!-- dashboard -->
+  <rect class="box" x="1040" y="396" width="152" height="96" rx="3"/>
+  <text class="title" x="1054" y="422">30-day sales</text>
+  <text class="title" x="1054" y="442">by country</text>
+  <text class="sub" x="1054" y="466">dashboard model</text>
+  <path class="flow" d="M1116 332 L1116 392"/>
+</svg>

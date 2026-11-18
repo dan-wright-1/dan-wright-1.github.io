@@ -12,7 +12,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
 body {
   margin: 0;
   background-color: var(--paper);
@@ -30,11 +30,11 @@ a { color: inherit; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 ::selection { background: var(--accent); color: var(--ink); }
 
-.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: 0.5rem 1rem; z-index: 10; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: 0.5rem 1rem; z-index: 60; }
 .skip:focus { left: 0; }
 
 /* nav */
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem var(--gutter); }
+.nav { position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem var(--gutter); background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .nav-mark { font-family: var(--mono); font-weight: 700; text-decoration: none; font-size: 1.1rem; }
 .nav nav { display: flex; gap: 1.5rem; font-family: var(--mono); font-size: 0.85rem; }
 .nav nav a { text-decoration: none; }
@@ -45,7 +45,7 @@ a { color: inherit; }
 .eyebrow { font-family: var(--mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 1rem; }
 .eyebrow::before { content: ""; display: inline-block; width: 0.7rem; height: 0.7rem; background: var(--accent); margin-right: 0.7rem; }
 .hero-name { font-family: var(--serif); font-weight: 400; font-size: clamp(3.5rem, 13vw, 10.5rem); line-height: 0.92; letter-spacing: -0.02em; margin: 0; }
-.reveal-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; }
+.reveal-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.24em; margin-bottom: -0.16em; }
 .reveal-word { display: inline-block; }
 .hero-row { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; align-items: flex-end; margin-top: clamp(1.5rem, 4vw, 3rem); }
 .hero-intro { max-width: 36rem; font-size: 1.25rem; margin: 0; }
@@ -220,6 +220,8 @@ a { color: inherit; }
 
 @media (max-width: 560px) {
   .nav { flex-wrap: wrap; gap: 0.75rem; }
+  html { scroll-padding-top: 7.5rem; }
+  .nav { padding-top: 0.9rem; padding-bottom: 0.9rem; }
   .nav nav { flex-wrap: wrap; gap: 0.4rem 1rem; }
 }
 
@@ -252,3 +254,44 @@ a { color: inherit; }
 .work-diagram-links { display: flex; gap: 1.25rem; }
 .work-diagram-links a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .work-diagram-links a:hover { background: var(--accent); }
+
+/* AdventureWorks live view: event feed + animated architecture diagram */
+.pf { margin-top: 2rem; max-width: 46rem; }
+.pf-label { display: flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.8rem; margin: 0 0 0.75rem; }
+.pf-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgba(255, 77, 28, 0.6); animation: pf-pulse 1.6s ease-out infinite; }
+@keyframes pf-pulse { to { box-shadow: 0 0 0 8px rgba(255, 77, 28, 0); } }
+.pf-empty { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+.work-diagram-frame--live { cursor: default; }
+.work-diagram-frame--live svg { display: block; width: 100%; min-width: 860px; height: auto; }
+.awd-status { display: flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.75rem; margin: 0; padding: 0.6rem 1rem; border-top: 1px solid var(--ink); background: var(--paper-2); min-width: 860px; }
+.awd .aw-zone { fill: none; stroke: #15120f; stroke-width: 1.5; stroke-dasharray: 6 5; }
+.awd .aw-zlabel { font: 600 12px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.08em; fill: #6b645a; }
+.awd .aw-box { fill: #f6f2e8; stroke: #15120f; stroke-width: 2; }
+.awd .aw-hot { fill: #ffd8cc; stroke: #15120f; stroke-width: 2; }
+.awd .aw-note { fill: #fff3d6; stroke: #15120f; stroke-width: 1.5; }
+.awd .aw-title { font: 18px Georgia, "Times New Roman", serif; fill: #15120f; }
+.awd .aw-sub { font: 12.5px Helvetica, Arial, sans-serif; fill: #15120f; }
+.awd .aw-mono { font: 12px ui-monospace, Menlo, Consolas, monospace; fill: #15120f; }
+.awd .aw-small { font: 11px ui-monospace, Menlo, Consolas, monospace; fill: #6b645a; }
+.awd .aw-live { font: 700 11px ui-monospace, Menlo, Consolas, monospace; fill: #c2380f; }
+.awd .aw-flow { fill: none; stroke: #15120f; stroke-width: 1.75; marker-end: url(#aw-arrow); }
+.awd .aw-pill { fill: #15120f; }
+.awd .aw-pilltext { font: 600 12px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.08em; fill: #f6f2e8; }
+.awd .aw-pillnum { fill: #ff4d1c; }
+/* continuous streams on every arrow: dark dots are single rows, orange blocks are batches */
+.awd .aw-stream { fill: none; pointer-events: none; animation-timing-function: linear; animation-iteration-count: infinite; }
+.awd .aw-stream--row { stroke: #15120f; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0.01 16; animation-name: aw-stream-row; animation-duration: 0.45s; }
+.awd .aw-stream--batch { stroke: #ff4d1c; stroke-width: 6; stroke-dasharray: 8 22; animation-name: aw-stream-batch; animation-duration: 0.9s; }
+@keyframes aw-stream-row { from { stroke-dashoffset: 16.01; } to { stroke-dashoffset: 0; } }
+@keyframes aw-stream-batch { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+/* event feed rows */
+.pf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.pf-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.9rem; background: #fff; border: 1.5px solid var(--ink); border-radius: 4px; box-shadow: 3px 3px 0 var(--ink); }
+.pf-title { margin: 0; font-size: 0.95rem; font-weight: 600; }
+.pf-detail { margin: 0.1rem 0 0; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+.pf-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .pf-dot, .awd .aw-stream { animation: none; } }
+
+/* project-page call to action (e.g. a live demo) */
+.work-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin: -0.5rem 0 2rem; }
+.work-cta span { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }

@@ -9,7 +9,8 @@
     "start": "serve out -l 3001",
     "lint": "eslint",
     "certs": "node scripts/fetch-certs.mjs",
-    "diagrams": "node scripts/fetch-diagrams.mjs"
+    "diagrams": "node scripts/fetch-diagrams.mjs",
+    "snapshot": "node scripts/snapshot-github.mjs"
   },
   "dependencies": {
     "motion": "^14.14.0",
