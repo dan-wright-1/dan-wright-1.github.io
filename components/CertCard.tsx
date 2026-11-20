@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import FlipCard from "./FlipCard";
 import CertBadge from "./CertBadge";
 import { Ear } from "./ProjectCard";
@@ -33,7 +34,7 @@ export default function CertCard({ index }: { index: number }) {
               <span className="pc-kicker">Credentials</span>
             </div>
             <h3 className="pc-title">Salesforce Certifications</h3>
-            <div className="pc-bottom">
+            <div className="pc-bottom pc-bottom--stack">
               <ul className="cc-badges" aria-label="Certification badges">
                 {certs.map((c) => (
                   <li key={c.title}>
@@ -41,6 +42,9 @@ export default function CertCard({ index }: { index: number }) {
                   </li>
                 ))}
               </ul>
+              <span className="pc-hint" style={{ "--hint-bg": BG, "--hint-fg": FG } as CSSProperties}>
+                See all {certs.length} <span className="pc-arrow" aria-hidden="true">→</span>
+              </span>
             </div>
             <Ear id="certs-front" flap={BG} ink={FG} />
           </div>

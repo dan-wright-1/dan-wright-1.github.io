@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import AdventureWorksDiagram from "@/components/pipeline/AdventureWorksDiagram";
 import PipelineFeed from "@/components/pipeline/PipelineFeed";
+import Highlight from "@/components/Highlight";
 import { PipelineSimProvider } from "@/components/pipeline/PipelineSim";
 import diagrams from "@/content/diagrams.json";
 import { projects } from "@/content/projects";
@@ -92,7 +93,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       <nav className="crumbs" aria-label="Breadcrumb">
         <Link href="/#work">← All projects</Link>
         {p.repo && <a href={`https://github.com/${GITHUB_USER}/${p.repo}`}>GitHub ↗</a>}
-        {p.repo && <Link href={`/repos/${p.repo}/`}>Full README →</Link>}
         {p.live && <a href={p.live}>Live ↗</a>}
       </nav>
 
@@ -103,7 +103,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           {p.status && <span className="work-status">{p.status}</span>}
         </div>
         <h1 className="work-title">{p.title}</h1>
-        <p className="work-tagline">{p.tagline}</p>
+        <p className="work-tagline"><Highlight text={p.tagline} /></p>
         {p.live && p.liveLabel && (
           <p className="work-cta">
             <a className="btn btn-solid" href={p.live}>{p.liveLabel} ↗</a>

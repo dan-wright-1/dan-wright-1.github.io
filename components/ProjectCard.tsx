@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import FlipCard from "./FlipCard";
 import type { Project } from "@/content/projects";
 import { GITHUB_USER } from "@/lib/github";
@@ -29,7 +30,7 @@ export default function ProjectCard({ index, project: p }: { index: number; proj
               <span className="pc-kicker">{p.kicker}</span>
             </div>
             <h3 className="pc-title">{p.title}</h3>
-            <div className="pc-bottom">
+            <div className="pc-bottom pc-bottom--stack">
               <ul className="pc-chips">
                 {p.placeholder ? (
                   <li>Coming soon</li>
@@ -37,7 +38,9 @@ export default function ProjectCard({ index, project: p }: { index: number; proj
                   p.stack.slice(0, 3).map((s) => <li key={s}>{s}</li>)
                 )}
               </ul>
-              <span className="pc-hint">Open →</span>
+              <span className="pc-hint" style={{ "--hint-bg": p.bg, "--hint-fg": p.fg } as CSSProperties}>
+                Case study <span className="pc-arrow" aria-hidden="true">→</span>
+              </span>
             </div>
             <Ear id={`${p.slug}-front`} flap={p.bg} ink={p.fg} />
           </div>

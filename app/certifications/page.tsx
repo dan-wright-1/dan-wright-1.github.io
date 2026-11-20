@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import CertBadge from "@/components/CertBadge";
+import Highlight from "@/components/Highlight";
 import { projects } from "@/content/projects";
 import { profile } from "@/content/profile";
 import { certData, certs, formatDate, shortName } from "@/lib/certs";
@@ -10,6 +11,12 @@ export const metadata: Metadata = {
   title: `Salesforce Certifications — ${profile.name}`,
   description: `${certs.length} active Salesforce certifications.`,
 };
+
+/** "Six" rather than "6" at the start of a sentence; falls back to digits past ten. */
+function countWord(n: number) {
+  const words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+  return words[n] ?? String(n);
+}
 
 export default function CertificationsPage() {
   const num = String(projects.length + 1).padStart(2, "0");
@@ -31,9 +38,11 @@ export default function CertificationsPage() {
         </div>
         <h1 className="work-title">Salesforce Certifications</h1>
         <p className="work-tagline">
-          Certified to configure Salesforce, build on it, model its data, analyse it in Tableau, and put AI agents to
-          work on it.
-          {certData.source === "trailhead" && " Every badge here comes from my public Trailhead profile, where each one can be verified."}
+          <Highlight
+            text={`**${countWord(certs.length)} Salesforce certifications** covering what a client needs **end to end**: running the platform, building on it, unifying its data, analysing it in Tableau, and putting AI agents to work.${
+              certData.source === "trailhead" ? " Each one can be **verified on my public Trailhead profile**." : ""
+            }`}
+          />
         </p>
       </header>
 

@@ -5,7 +5,6 @@ import path from "node:path";
 export const GITHUB_USER = "dan-wright-1";
 
 const API = "https://api.github.com";
-const RAW = "https://raw.githubusercontent.com";
 
 export type Repo = {
   name: string;
@@ -22,12 +21,13 @@ export type Repo = {
 
 // ---- fallback: content/github-snapshot.json (written by `npm run snapshot`) ----
 //
+// The repo list (the only thing the site reads from GitHub) is fetched live first.
 // Every GitHub read below tries the live API first. If that fails (outage, rate
 // limit, network), it falls back to the saved snapshot and raises a warning, so
 // the build still deploys. Only if the snapshot doesn't have the item either does
 // the build fail, which leaves the previous live site in place.
 
-type Snapshot = { savedAt: string; repos: Repo[]; trees: Record<string, string[]>; files: Record<string, string | null> };
+type Snapshot = { savedAt: string; repos: Repo[] };
 let snapshot: Snapshot | null | undefined;
 
 function loadSnapshot(): Snapshot | null {
@@ -101,51 +101,4 @@ export async function getRepos(): Promise<Repo[]> {
     },
     (s) => s.repos,
   );
-}
-
-export async function getRepo(name: string): Promise<Repo> {
-  return withFallback(name, () => gh<Repo>(`/repos/${GITHUB_USER}/${name}`), (s) => s.repos.find((r) => r.name === name));
-}
-
-/** Fetch a file as text from the default branch; null if it does not exist. */
-export async function getFile(repo: string, branch: string, filePath: string): Promise<string | null> {
-  return withFallback(
-    `${repo}/${filePath}`,
-    async () => {
-      const res = await fetch(`${RAW}/${GITHUB_USER}/${repo}/${branch}/${filePath}`);
-      if (res.status === 404) return null; // genuinely missing, not a failure
-      if (!res.ok) throw new Error(`GitHub raw ${res.status} for ${repo}/${filePath}`);
-      return res.text();
-    },
-    // A repo the snapshot knows but a path it doesn't means the file didn't exist then.
-    (s) => (`${repo}/${filePath}` in s.files ? s.files[`${repo}/${filePath}`] : repo in s.trees ? null : undefined),
-  );
-}
-
-export async function getReadme(repo: Repo): Promise<string | null> {
-  for (const f of ["README.md", "readme.md", "Readme.md"]) {
-    const text = await getFile(repo.name, repo.default_branch, f);
-    if (text !== null) return text;
-  }
-  return null;
-}
-
-/** Paths of all markdown files in the repo (README excluded). */
-export async function getMarkdownPaths(repo: Repo): Promise<string[]> {
-  return withFallback(
-    `${repo.name}'s file list`,
-    async () => {
-      const tree = await gh<{ tree: { path: string; type: string }[] }>(
-        `/repos/${GITHUB_USER}/${repo.name}/git/trees/${repo.default_branch}?recursive=1`,
-      );
-      return tree.tree
-        .filter((n) => n.type === "blob" && /\.md$/i.test(n.path) && !/^readme\.md$/i.test(n.path))
-        .map((n) => n.path);
-    },
-    (s) => s.trees[repo.name],
-  );
-}
-
-export function rawUrl(repo: Repo, filePath: string) {
-  return `${RAW}/${GITHUB_USER}/${repo.name}/${repo.default_branch}/${filePath}`;
 }

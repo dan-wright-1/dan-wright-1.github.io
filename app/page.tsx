@@ -1,4 +1,3 @@
-import Link from "next/link";
 import CertCard from "@/components/CertCard";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
@@ -96,11 +95,11 @@ export default async function Home() {
           <ul className="rows">
             {more.map((r) => (
               <li key={r.name}>
-                <Link href={`/repos/${r.name}/`} className="row">
+                <a href={r.html_url} className="row">
                   <span className="row-name">{r.name}</span>
                   <span className="row-desc">{r.description ?? "—"}</span>
-                  <span className="row-meta">{r.language ?? ""}</span>
-                </Link>
+                  <span className="row-meta">{[r.language, "GitHub ↗"].filter(Boolean).join(" · ")}</span>
+                </a>
               </li>
             ))}
           </ul>

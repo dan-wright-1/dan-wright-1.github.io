@@ -57,21 +57,21 @@ export const projects: Project[] = [
     fg: "#ffffff",
     repo: "NorthStar-Platform",
     tagline:
-      "NorthStar Retail already keeps its data in Snowflake. The course had me build its AI platform on AWS. This project asks the question an architect would get on day one: why not build it where the data already lives?",
+      "NorthStar, a fictional retailer, needed to bring their business tech into its competitive era: **a churn prediction model** that gives marketing **a weekly list of customers likely to leave** and a customer service agent supported by RAG that **strictly enforces refund and credit policy**. The class had us build it on AWS, and I’m **rebuilding it on Snowflake** to showcase the easier, managed platform version.",
     facts: [
       { label: "Context", value: "CS 401R, BYU (AWS build) + independent Snowflake track" },
       { label: "Role", value: "Sole builder: infrastructure, data, models, agent, evaluation" },
       { label: "Status", value: "AWS Labs 1–3 complete · Snowflake rebuild underway" },
     ],
     metrics: [
-      { value: "0.783", label: "test AUC for the churn model" },
-      { value: "0.74", label: "precision in the top-10% churn list" },
-      { value: "+0.059", label: "AUC over a recency-only baseline (95% CI excludes 0)" },
-      { value: "33 / 0", label: "evidence checks passed / failed on the final run" },
+      { value: "$128.5M", label: "is lost to customers leaving every year at NorthStar: the problem this platform targets" },
+      { value: "22% → 74%", label: "of the customers marketing reaches out to are actually about to leave: today’s untargeted outreach vs the model’s list" },
+      { value: "1 in 3", label: "of all the customers about to leave are on the model’s short list, which covers just 10% of the customer base" },
     ],
     problem: [
-      "NorthStar is a fictional retailer whose point-of-sale, e-commerce, CRM and loyalty data land in a Snowflake warehouse every night. The course puts that integration out of scope and builds the AI platform on AWS: a governed data lake, features, a weekly churn list for marketing, and a customer-service agent that has to follow refund and credit policy.",
-      "I built that AWS platform first, lab by lab. The Snowflake track rebuilds the same outcomes the way Snowflake would do them, rather than copying the AWS design. A faithful copy would make Snowflake look worse than it is and say nothing useful. Where the native approach differs, that difference is the comparison.",
+      "NorthStar is a fictional retailer whose point-of-sale, e-commerce, CRM and loyalty data already land in a Snowflake warehouse every night. The course set that aside and had us build the AI platform on AWS: a governed data lake, customer features, a weekly churn list for marketing, and a customer-service agent that has to follow refund and credit policy.",
+      "Building on AWS meant copying every customer record out of Snowflake into S3, then keeping a second pipeline, a second set of permissions and eleven separately configured, separately billed AWS services in sync. That is a lot to run, secure and pay for, just to reach data that was already in one place.",
+      "For a company that already runs Snowflake, the realistic choice is to build where the data lives: one copy of the data, one set of access rules, no network layer to design, and skills the team already has. Snowflake itself runs on AWS, so the real decision is AWS services wired together by hand versus Snowflake’s managed ones. My rebuild tests that with working code, matching the AWS version’s business results rather than copying its architecture.",
     ],
     flowTitle: "The AWS build",
     flow: [
@@ -128,7 +128,7 @@ export const projects: Project[] = [
     liveLabel: "Try the live agent",
     liveNote: "Runs on Vercel and is rate-limited. Web search is off in the demo; the other three tools are live.",
     tagline:
-      "A multi-tool agent that decides for itself whether a question needs math, the web, an internal knowledge base or an encyclopedia, and shows its work.",
+      "**A public AI assistant you can try right now**. It decides for itself when to calculate, search a knowledge base or look something up, and **labels which tool produced each answer**, so a user can tell a checked fact from a guess. It is deployed with **guardrails that cap what any one visitor can cost**.",
     facts: [
       { label: "Context", value: "Individual project, BYU (multi-tool agent assignment)" },
       { label: "Role", value: "Sole developer: PRD, architecture, build, tests" },
@@ -176,7 +176,7 @@ export const projects: Project[] = [
       alt: "Pipeline diagram. In Docker Compose, a data generator writes 50 orders every 10 seconds to PostgreSQL and chat logs to MongoDB. A Python processor polls both every 10 seconds, reads rows newer than each source's watermark, and uploads CSV or JSON batches to three Snowflake stages. Snowflake tasks copy the stages into raw tables every minute and then clear them. dbt rebuilds new orders into the nested historical format, combines them with historical orders using UNION ALL, cleans chat logs, and feeds a 30-day sales by country dashboard model.",
     },
     tagline:
-      "Adventure Works analysts could only see last year's sales. This pipeline brings new orders and support chats into the warehouse every few minutes, in the same shape as the old data.",
+      "A **real-time pipeline** that moves a retailer’s new orders and customer-support chats from its operational databases into the data warehouse **within about a minute**, so analysts stop working from last year’s numbers. New data lands in the same shape as the old, so **every existing report kept working without a rewrite**.",
     facts: [
       { label: "Context", value: "IS 566: Data Engineering, BYU (final project)" },
       { label: "Role", value: "Sole developer" },
@@ -217,7 +217,7 @@ export const projects: Project[] = [
     bg: "#15120f",
     fg: "#f6f2e8",
     tagline:
-      "I designed it as a product mock-up first, then built it for real. Each morning it puts every new assignment into the right list, so I never have to go looking for it.",
+      "A personal automation that **copies every new class assignment from Canvas into Google Tasks** each morning, sorted into a list per course, so **no due date slips past me** and nothing gets typed twice. I designed it as a product mock-up first, then built it, and it **runs every morning** on my own machine.",
     facts: [
       { label: "Context", value: "Personal tool, runs daily" },
       { label: "Role", value: "Designer and builder" },
@@ -249,34 +249,8 @@ export const projects: Project[] = [
     next: ["Move a task when its Canvas due date changes (v1 creates only)."],
     related: [
       { label: "Design mock-up (live)", href: "https://dan-wright-1.github.io/canvas-to-tasks/" },
-      { label: "Mock-up write-up", href: "/repos/canvas-to-tasks/" },
+      { label: "Mock-up write-up on GitHub", href: "https://github.com/dan-wright-1/canvas-to-tasks" },
     ],
-  },
-  {
-    slug: "rpm-planner",
-    title: "Tony Robbins Inspired RPM Planner WebApp",
-    kicker: "Product",
-    placeholder: true,
-    blurb: "Placeholder: a one-paragraph summary of the RPM planner app goes here.",
-    stack: ["TBD"],
-    stat: { value: "—", label: "headline result to be added" },
-    bg: "#f2b705",
-    fg: "#15120f",
-    tagline: "Placeholder: one or two sentences on who the planner is for and what it changes for them.",
-    facts: [
-      { label: "Context", value: "TBD" },
-      { label: "Role", value: "TBD" },
-      { label: "Status", value: "Write-up coming soon" },
-    ],
-    metrics: [],
-    problem: ["Placeholder: the problem the app solves and why existing planners fall short."],
-    flowTitle: "How it works",
-    flow: [
-      { title: "Step 1", detail: "Placeholder." },
-      { title: "Step 2", detail: "Placeholder." },
-      { title: "Step 3", detail: "Placeholder." },
-    ],
-    highlights: [],
   },
 ];
 
