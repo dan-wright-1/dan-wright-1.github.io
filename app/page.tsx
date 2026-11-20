@@ -1,3 +1,4 @@
+import Link from "next/link";
 import CertCard from "@/components/CertCard";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
@@ -109,6 +110,7 @@ export default async function Home() {
       <section id="about" className="section about">
         <h2>About</h2>
         <p>{profile.about}</p>
+        <p className="about-more"><Link href="/about/">How I work on a team, and the design lines I hold →</Link></p>
         <div className="edu">
           <h3>{education.degree}</h3>
           <p className="edu-school">{education.school}</p>

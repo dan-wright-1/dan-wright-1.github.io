@@ -287,3 +287,33 @@ a { color: inherit; }
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+
+/* ---- /about/ team intro sheet ---- */
+.about-page { max-width: 1100px; margin: 0 auto; padding: 2rem var(--gutter) 0; }
+.about-sheet { display: grid; grid-template-columns: minmax(16rem, 34%) 1fr; margin-top: 1.5rem; border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); background: var(--paper-2); }
+.about-id { background: var(--ink); color: var(--paper-2); padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2.5rem); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; gap: 0.5rem; }
+.about-monogram { width: 9.5rem; height: 9.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--ink); border: 3px solid var(--paper-2); font-family: var(--serif); font-size: 4.2rem; letter-spacing: -0.02em; margin-bottom: 1rem; }
+.about-hello { font-family: var(--serif); font-weight: 400; font-size: clamp(2.4rem, 4vw, 3.2rem); line-height: 1; margin: 0 0 0.75rem; }
+.about-name { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; margin: 0; }
+.about-role { margin: 0 0 1rem; font-size: 0.95rem; opacity: 0.85; }
+.about-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; }
+.about-chips li { font-family: var(--mono); font-size: 0.72rem; border: 1.5px solid currentColor; border-radius: 999px; padding: 0.2rem 0.7rem; }
+.about-body { padding: clamp(1.5rem, 3vw, 2.5rem); display: grid; gap: 1.75rem; }
+.about-group-title { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.75rem; }
+.about-sub { font-family: var(--serif); font-size: 1.35rem; margin: 0.75rem 0 0.5rem; }
+.about-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.about-rows li { display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.9rem; align-items: start; background: #fff; border: 1.5px solid var(--ink); border-left: 5px solid var(--tone); border-radius: 4px; padding: 0.75rem 1rem; }
+.about-rows--work { --tone: #ff4d1c; --p-bg: #ff4d1c; }
+.about-rows--champion { --tone: #2f6b3a; --p-bg: #2f6b3a; }
+.about-rows--push { --tone: #15120f; --p-bg: #8a8178; }
+.about-icon { width: 1.5rem; height: 1.5rem; margin-top: 0.15rem; fill: none; stroke: var(--tone); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.about-label { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 0.2rem; color: var(--tone); }
+.about-text { margin: 0; font-size: 1rem; line-height: 1.5; }
+.about-text .hl { font-weight: 600; }
+.about-cta { margin: 0.25rem 0 0; display: flex; justify-content: flex-end; }
+@media (max-width: 800px) { .about-sheet { grid-template-columns: 1fr; } .about-cta { justify-content: flex-start; } }
+
+.about-more { font-family: var(--mono); font-size: 0.85rem !important; }
+.about-more a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.about-more a:hover { background: var(--accent); }
+.about-photo { width: 10.5rem; height: 10.5rem; border-radius: 50%; object-fit: cover; border: 4px solid var(--paper-2); outline: 3px solid var(--accent); outline-offset: 3px; margin-bottom: 1.1rem; display: block; }

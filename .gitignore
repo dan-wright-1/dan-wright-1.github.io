@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Course reference material (someone else's work): never publish
+content/*example*.pdf
